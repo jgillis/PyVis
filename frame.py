@@ -12,6 +12,10 @@ class Frame(fdl.graph.Frame):
     if isinstance(self.base,fdl.graph.WorldFrame):
       return self.matrix.value(t)
     return self.base.getFrameMatrix(t) * self.matrix.value(t)
+    
+class WorldFrame(fdl.graph.WorldFrame):
+  def getFrameMatrix(self,t=None):
+    return self.fg.eye
 
 class FrameGraph(fdl.graph.FrameGraph):
   eye = eye(4)

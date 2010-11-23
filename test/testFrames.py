@@ -1,6 +1,6 @@
 from visualizer.expressions import *
-from states import *
-from Frame import *
+from visualizer.states import *
+from visualizer.frame import *
 import fdl.primitives
 
 sm = FileStateManager('result.txt')

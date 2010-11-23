@@ -1,0 +1,21 @@
+variables:
+  - name: psi
+    deriv: omega alpha
+    type: angular
+    bounds: -pi pi
+
+  - name: alpha
+    type: angular
+    bounds: -pi pi
+
+frames:
+  - id: 1
+    name: pw
+    description: platform
+    base: world
+    matrix: Rx(psi)
+
+  - id: 2
+    name: p
+    description: platform
+    matrix: Rx(alpha)

@@ -1,6 +1,5 @@
-from Frame import *
-	
-from expressions import *
+from visualizer.frame import *
+from visualizer.expressions import *
 import fdl.primitives
 
 class Scene:

@@ -1,5 +1,5 @@
 import visual
-import geometry as geometry
+import visualizer.geometry as geometry
 
 class Primitive(geometry.Primitive):
   def setFrameMatrix(self,M):  # convert T matrix to frame

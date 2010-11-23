@@ -36,4 +36,15 @@ class Scene:
 
   def getWorldFrame(self):
     return fg.getWorldFrame()
+    
+  def setTimeManager(self,tm):
+    self.timeManager=tm
+    self.timeManager.draw()
+      
+  def start(self):
+    while True:
+      self.timeManager.mainloop()
+      t = self.timeManager.getTime()
+      for o in self.objects:
+        o.update(t)
 

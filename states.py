@@ -50,7 +50,8 @@ class FileStateManager(StateManager):
         self.variables[k] = interp(t,self.timevec,c)
     return dict(self.constants,**self.variables)
 
-
+  def getTimeVec(self):
+    return self.timevec
 
 
 class DummyStateManager(StateManager):

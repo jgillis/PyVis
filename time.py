@@ -1,3 +1,5 @@
+from numpy import prod
+
 class TimeManager:
   # should be able to autput floats and int according to discretised flag
   def getT(self):
@@ -7,13 +9,14 @@ class TimeManager:
 class FixedTimeManager(TimeManager):
   def setTimeVec(self,vec):
     self.timevec = vec
-    self.npoints = vec.shape[0] * vec.shape[1]
+    self.npoints = prod(vec.shape)
+    self.discrete=True
+    self.pause = False
+    self.setDiscrete()
 
   def initcheck(self):
-    if not(hasattr(self,timevec)):
+    if not(hasattr(self,'timevec')):
       raise Exception("FixedTimeManager has not been initialised")
-    if not(hasattr(self,type)):
-      self.setDiscrete()
       
   
   def getTimeVec(self):
@@ -26,13 +29,23 @@ class FixedTimeManager(TimeManager):
       return 0
     else:
       return t
+      
+  def getTime(self):
+    if self.type==0:
+      return self.index
+    else:
+      return self.T
 
-  def setDiscrete(step=1):
+  def setDiscrete(self,step=1):
     self.type=0
     self.step=1
     self.index=0    
    
-  def advance(self,step=self.step):
-    self.index += self.step
-    while self.index >= len(self.npoints):
-      self.index -= len(self.npoints)
+  def advance(self,step=None):
+    if self.pause or not(hasattr(self,'timevec')):
+      return
+    if step is None:
+      step=self.step
+    self.index += step
+    while self.index >= self.npoints:
+      self.index -= self.npoints

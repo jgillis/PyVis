@@ -1,5 +1,5 @@
-from expressions import *
-from states import *
+from visualizer.expressions import *
+from visualizer.states import *
 
 sm = FileStateManager('result.txt')
 em = ExpressionManager(sm)

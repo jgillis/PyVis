@@ -1,4 +1,4 @@
-from expressions import *
+from visualizer.expressions import *
 from states import *
 from Frame import *
 import fdl.primitives

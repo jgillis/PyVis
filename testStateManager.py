@@ -1,4 +1,4 @@
-from states import *
+from visualizer.states import *
 
 sm = FileStateManager('result.txt')
 

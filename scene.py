@@ -14,7 +14,7 @@ class Scene:
     self.stateManager=stateManager
     self.expressionManager=ExpressionManager(stateManager)
     self.fg=FrameGraph(self.expressionManager)
-    self.fg.config(filename, Frame)
+    self.fg.config(filename, Frame, WorldFrame)
     self.expressionManager.addContext(fdl.primitives.__dict__)
       
   def add(self,object):

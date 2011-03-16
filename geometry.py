@@ -3,7 +3,7 @@
 class KeywordAttributes:
   def __init__(self,**kwargs):
     for k,v in kwargs.items():
-      seytattr(self,k,v)
+      setattr(self,k,v)
 
 class Visualizer:
   scene=None
@@ -31,6 +31,7 @@ class Primitive(KeywordAttributes,Visualizer):
   
   def update(self,t=None):
     self.setFrameMatrix(self.frame.getFrameMatrix(t))
+    self.draw_update()
 
 class Box(Primitive):
   """
@@ -42,11 +43,21 @@ class Box(Primitive):
 
   def __init__(self,**kwargs):
     Primitive.__init__(self,**kwargs)
+  
+class Cylinder(Primitive):
+  """
+    r: radius
+    h: height
+    
+    The cylinder axis is the z-axis
+  """
+  expressions={'r':1,'h':0.1}
+
+  def __init__(self,**kwargs):
+    Primitive.__init__(self,**kwargs)
 
   def update(self,t=None):
     Primitive.update(self,t)
-    self.length = self.x.value()
-    self.height = self.y.value()
-    self.width  = self.z.value()
-  
+    self.radius = self.r.value()
+    self.height = self.h.value()
     

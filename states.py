@@ -1,5 +1,5 @@
 import types
-from visualizer.dymio import *
+from dymola.dymio import *
 from numpy import *
 
 class StateManager:

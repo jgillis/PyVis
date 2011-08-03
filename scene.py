@@ -42,6 +42,9 @@ class Scene:
     self.timeManager.draw()
       
   def start(self):
+    """
+    The main loop that does the drawing. Never returns
+    """
     while True:
       self.timeManager.mainloop()
       t = self.timeManager.getTime()

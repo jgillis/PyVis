@@ -9,18 +9,33 @@ class Scene:
   def __init__(self):
     pass
     
-  def config(self,filename,stateManager):
+  def config(self,filename,timeManager,stateManager):
     self.stateManager=stateManager
-    self.expressionManager=ExpressionManager(stateManager)
+    self.timeManager=timeManager
+    self.expressionManager=ExpressionManager(timeManager,stateManager)
     self.fg=FrameGraph(self.expressionManager)
     self.fg.config(filename, Frame, WorldFrame)
     self.expressionManager.addContext(fdl.primitives.__dict__)
       
   def add(self,object):
+    """
+    
+    Use to add a Frame
+    
+    """
     if isinstance(object,Frame):
       self.fg.add(object)
       
   def addObject(self,*args):
+    """
+    
+    addObject(obj)
+      obj get's added to world frame {0}
+    
+    addObject(frame, obj)
+      frame must be an integer
+    
+    """
     if len(args)==1:
       frame=0
       obj=args[0]
@@ -36,18 +51,22 @@ class Scene:
 
   def getWorldFrame(self):
     return fg.getWorldFrame()
-    
-  def setTimeManager(self,tm):
-    self.timeManager=tm
-    self.timeManager.draw()
       
   def start(self):
     """
     The main loop that does the drawing. Never returns
     """
+    if hasattr(self.stateManager,'draw'):
+      self.stateManager.draw()
+    if hasattr(self.timeManager,'draw'):
+      self.timeManager.draw()
+      
     while True:
-      self.timeManager.mainloop()
+      if hasattr(self.timeManager,'mainloop'):
+        self.timeManager.mainloop()
       t = self.timeManager.getTime()
+      if hasattr(self.stateManager,'mainloop'):
+        self.stateManager.mainloop()
       for o in self.objects:
         o.update(t)
 

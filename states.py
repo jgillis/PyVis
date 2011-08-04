@@ -2,7 +2,12 @@ import types
 from dymola.dymio import *
 from numpy import *
 
+
 class StateManager:
+  pass
+  
+
+class TimeDependantStateManager(StateManager):
   def __init__(self,filename):
     pass
 
@@ -19,10 +24,12 @@ class StateManager:
 
 
 # Make this independent of timeManager
-class FileStateManager(StateManager):
-  def __init__(self,filename):
+class FileStateManager(TimeDependantStateManager):
+  def __init__(self,filename, timeManager=None):
     self.dym=ResultDymolaTextual(filename)
     self.timevec=self.dym.data[1][:,0]
+    if not(timeManager is None) and hasattr(timeManager,'setTimeVec'):
+      timeManager.setTimeVec(self.timevec)
     self.variables=dict()
     for i in range(len(self.dym.name)):
       if self.dym.dataInfo[i,0]==2:
@@ -52,9 +59,28 @@ class FileStateManager(StateManager):
 
   def getTimeVec(self):
     return self.timevec
+    
+class ExpressionStateManager(TimeDependantStateManager):
+  def __init__(self,expressions):
+    """
+     A dict of (variable name -> Expression)
+    """
+    self.expressions = expressions
 
+  def getT(self,t):
+    return t
 
-class DummyStateManager(StateManager):
+  def getStates(self,t):
+    return dict([(key, value.value(t)) for key, value in self.expressions.iteritems()])
+    
+class InteractiveStateManager(StateManager):
+  def __init__(self,variables):
+     """
+      Variables is a dict with the signature as found in fdl
+     """
+     self.variables = variables
+
+class DummyStateManager(TimeDependantStateManager):
   def getT(self,t):
     return t
   def getStates(self,t):

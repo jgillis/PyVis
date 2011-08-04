@@ -1,11 +1,25 @@
+from __future__ import absolute_import
 from numpy import prod
-
+import time
+import types
+  
 class TimeManager:
-  # should be able to autput floats and int according to discretised flag
+  # should be able to output floats and int according to discretised flag
+  
+  def __call__(self):
+    return self.getT()
+    
   def getT(self):
     return t
 
 
+class RealTimeManager(TimeManager):
+  def __init__(self):
+    self.starttime = time.time()
+  def getT(self):
+    return time.time()-self.starttime
+  getTime = getT
+  
 class FixedTimeManager(TimeManager):
   def setTimeVec(self,vec):
     self.timevec = vec

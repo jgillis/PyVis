@@ -19,3 +19,4 @@ frames:
     name: p
     description: platform
     matrix: Rx(alpha)
+    base: 1

@@ -2,7 +2,7 @@
 from numpy import *
 # Run as: python sample.py
 
-execfile('visualize.py');
+#execfile('visualize.py');
 
 from vpythonvisualizer import *
 
@@ -14,9 +14,7 @@ def myFrame(t,state):
 	alpha = state['alpha']
 	return TRx(alpa)
 
-scene.add(Frame(myFrame,base='baseframe',name='myframe'));
-scene.addFrame(myFrame,base='baseframe',name='myframe');
-scene.add(Frame('TRx(x,y,z)',base='baseframe',name='myframe'));
+scene.addFrame('world',myFrame,name='myframe');
 
 scene.getFrame('world')
 
@@ -35,6 +33,8 @@ def myObject(t,state):
 
 scene.addObject('world',[template.axes(color=color.white, length='alpha')]);
 scene.addObject('world',myObject);
+
+scene.addObject('world',Box(x='alpha',y='beta',z='{saf}'))
 
 
 

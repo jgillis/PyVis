@@ -77,8 +77,14 @@ class InteractiveStateManager(StateManager):
   def __init__(self,variables):
      """
       Variables is a dict with the signature as found in fdl
+      or the name of an fdl file
      """
-     self.variables = variables
+     from fdl.parser import fdl
+     if isinstance(variables,type("")):
+       self.fdl = fdl(variables)
+       self.variables = self.fdl.tree['variables']
+     else: 
+       self.variables = variables
 
 class DummyStateManager(TimeDependantStateManager):
   def getT(self,t):

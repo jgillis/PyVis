@@ -212,6 +212,19 @@ class Cylinder(Primitive):
     self.radius = self.r.value(t)
     self.height = self.h.value(t)
     
+class Text(Primitive):
+  """
+    caption = 
+    
+  """
+  expressions={'caption': 'foo'}
+
+  def __init__(self,**kwargs):
+    Primitive.__init__(self,**kwargs)
+
+  def update(self,t=None, pre=None):
+    Primitive.update(self,t,pre)
+    
     
 class Arrow(Primitive):
   """
@@ -236,5 +249,18 @@ class Axes(PrimitiveCollection):
   """
   def __init__(self,**kwargs):
     PrimitiveCollection.__init__(self,**kwargs)
-    self.add([self.geometryModule.Arrow(x=1,y=0,z=0), self.geometryModule.Arrow(x=0,y=1,z=0), self.geometryModule.Arrow(x=0,y=0,z=1)])
+    self.add([self.geometryModule.Arrow(x=1,y=0,z=0),
+              self.geometryModule.Arrow(x=0,y=1,z=0),
+              self.geometryModule.Arrow(x=0,y=0,z=1),
+              self.geometryModule.Text(caption="'x'",T='tr(1,0,0)'),
+              self.geometryModule.Text(caption="'y'",T='tr(0,1,0)'),
+              self.geometryModule.Text(caption="'z'",T='tr(0,0,1)')
+              ])
+    
+    
+    
+    
+    
+    
+    
 

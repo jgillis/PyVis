@@ -1,0 +1,34 @@
+variables:
+  - name: alpha
+    deriv: omega alpha
+    type: angular
+    bounds: -pi pi
+
+  - name: beta
+    type: angular
+    bounds: -pi pi
+    
+  - name: x
+  
+  - name: y
+    type: linear
+    bounds: -1 1
+
+frames:
+  - id: 1
+    name: pw
+    description: platform
+    base: world
+    matrix: Rx(alpha)
+
+  - id: 2
+    name: p
+    description: platform
+    matrix: tr(x,y,0)
+    base: 1
+    
+  - id: 3
+    name: p
+    description: platform
+    matrix: Ry(beta)
+    base: 2

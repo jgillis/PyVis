@@ -30,7 +30,7 @@ class ExpressionManager:
     if isinstance(expr,types.FunctionType):
       return (2,expr)
     if isinstance(expr,types.StringType):
-      if expr.startswith('"') and expr.endswith('"'):
+      if (expr.startswith('"') and expr.endswith('"')) or (expr.startswith("'") and expr.endswith("'")):
         return (0,expr[1:-1])
       return (1,expr)
     return (0,expr)

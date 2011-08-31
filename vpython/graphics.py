@@ -1,6 +1,7 @@
 import visual
 import visualizer.geometry as geometry
 import visualizer.colors as colors
+import visualizer.scene as scene
 import types
 
 class Primitive(geometry.Primitive):
@@ -100,6 +101,26 @@ class Cylinder(geometry.Cylinder,Primitive):
     self.vis.radius = self.r.value()
     Primitive.draw_update(self)
     
-class Scene:
-  def __init__(self,scene):
-    self.scene=display(x=w, y=0, width=w, height=w, autoscale=True, forward=vector(1,1,-1), newzoom=10,up=(0,0,1))
+    
+class Text(geometry.Text,Primitive):
+  """
+    caption = 
+    
+  """
+  expressions={'caption': 'foo'}
+
+  def draw(self):
+    self.f = visual.frame()
+    self.vis=visual.label(frame=self.f,box = False)
+    Primitive.draw(self)
+    self.draw_update()
+    
+  def draw_update(self):
+    self.vis.text = self.caption.value()
+    Primitive.draw_update(self)
+    
+class Scene(scene.Scene):
+  def __init__(self):
+    scene.Scene.__init__(self)
+    w = 800
+    self.scene=visual.display(x=0, y=0, width=w, height=w, autoscale=True, forward=(1,1,-1), newzoom=1,up=(0,0,1))

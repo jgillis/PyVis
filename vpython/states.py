@@ -1,6 +1,5 @@
-import visualizer.time
-from visual.controls import *
-import visual.controls
+import visualizer.states
+import visual.controls as controls
 import types
 
 import ipdb
@@ -35,20 +34,20 @@ class InteractiveStateManager(visualizer.states.InteractiveStateManager):
     spacing = (spacing_px / h) * r
     
 
-    self.c = controls(x=0, y=0, width=w, height=h, range=r)
+    self.c = controls.controls(x=0, y=0, width=w, height=h, range=r)
     for v in self.variables:
-      s = slider(pos=(-15,posy), width=7, length=70, axis=(1,0,0))
+      s = controls.slider(pos=(-15,posy), width=7, length=70, axis=(1,0,0))
       
       s.value = v["default"]
       s.min,s.max = v["bounds"]
       
-      sc = label(text=v["name"],align='right', pos=(r*(-0.5+0.1),posy),display=self.c.display,box = False )
+      sc = controls.label(text=v["name"],align='right', pos=(r*(-0.5+0.1),posy),display=self.c.display,box = False )
       self.sliders.append(s)
       self.slidercaptions.append(sc)
       print posy
       posy+=spacing
     
-    button(pos=(0,r*(0.5-button_area_px/h)), height=button_height_px/h*r, width=r/2, text='reset' , action=lambda: self.reset())
+    controls.button(pos=(0,r*(0.5-button_area_px/h)), height=button_height_px/h*r, width=r/2, text='reset' , action=lambda: self.reset())
 
   def getT(self,t):
     if isinstance(t,types.IntType):

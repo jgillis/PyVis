@@ -1,4 +1,5 @@
 import kinetics.kinematics as kinematics
+from kinetics.kinematics import tr
 import numpy
 
 class KeywordAttributes:
@@ -244,6 +245,7 @@ class Arrow(Primitive):
   def update(self,t=None, pre=None):
     Primitive.update(self,t,pre)
     
+    
 class Axes(PrimitiveCollection):
   """
   """
@@ -252,9 +254,9 @@ class Axes(PrimitiveCollection):
     self.add([self.geometryModule.Arrow(x=1,y=0,z=0),
               self.geometryModule.Arrow(x=0,y=1,z=0),
               self.geometryModule.Arrow(x=0,y=0,z=1),
-              self.geometryModule.Text(caption="'x'",T='tr(1,0,0)'),
-              self.geometryModule.Text(caption="'y'",T='tr(0,1,0)'),
-              self.geometryModule.Text(caption="'z'",T='tr(0,0,1)')
+              self.geometryModule.Text(caption="'x'",T=tr(1,0,0)),
+              self.geometryModule.Text(caption="'y'",T=tr(0,1,0)),
+              self.geometryModule.Text(caption="'z'",T=tr(0,0,1))
               ])
     
     

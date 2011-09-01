@@ -1,19 +1,19 @@
-import visualizer.time
-from visual.controls import *
-import visual.controls
+import visualizer.timemanager
+import visual
+import visual.controls as controls
 
-class FixedTimeManager(visualizer.time.FixedTimeManager):
+class FixedTimeManager(visualizer.timemanager.FixedTimeManager):
   def draw(self):
     w = 200
-    self.c = controls(x=0, y=0, width=w, height=w, range=100)
-    button(pos=(-60,30), height=30, width=40, text='<<' , action=lambda: self.first())
-    toggle(pos=(0,30),height=30, width=40, text='Pause', action=lambda: self.pauseToggle())
-    button(pos=(60,30), height=30, width=40, text='>>',action= lambda: self.last())
+    self.c = controls.controls(x=0, y=0, width=w, height=w, range=100)
+    controls.button(pos=(-60,30), height=30, width=40, text='<<' , action=lambda: self.first())
+    controls.toggle(pos=(0,30),height=30, width=40, text='Pause', action=lambda: self.pauseToggle())
+    controls.button(pos=(60,30), height=30, width=40, text='>>',action= lambda: self.last())
     
-    self.s1=slider(pos=(-15,-40), width=7, length=70, axis=(1,0,0), action=lambda: self.slider1())
+    self.s1=controls.slider(pos=(-15,-40), width=7, length=70, axis=(1,0,0), action=lambda: self.slider1())
     self.s1.value = 0
     
-    s2=slider(pos=(-15,80), width=7, length=70, axis=(1,0,0))
+    s2=controls.slider(pos=(-15,80), width=7, length=70, axis=(1,0,0))
     s2.value = 1
     
     self.pause = False
@@ -56,7 +56,7 @@ class FixedTimeManager(visualizer.time.FixedTimeManager):
     
   def mainloop(self):
     self.c.interact()
-    rate(40)
+    visual.rate(40)
     self.advance()
     self.s1.value = self.sliderposFromstate()
     print self.index

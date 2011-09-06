@@ -1,11 +1,5 @@
-from visualizer.vpython.graphics import *
 from visualizer import *
-from visualizer.states import *
-from visualizer.vpython.time import *
-from visualizer.scene import *
-from visualizer.time import *
-from visualizer.geometry import PrimitiveCollection
-from visualizer.vpython.graphics import *
+from visualizer.vpython import *
 
 tm = RealTimeManager()
 em = ExpressionManager(tm)

@@ -74,17 +74,8 @@ class ExpressionStateManager(TimeDependantStateManager):
     return dict([(key, value.value(t)) for key, value in self.expressions.iteritems()])
     
 class InteractiveStateManager(StateManager):
-  def __init__(self,variables):
-     """
-      Variables is a dict with the signature as found in fdl
-      or the name of an fdl file
-     """
-     from fdl.parser import fdl
-     if isinstance(variables,type("")):
-       self.fdl = fdl(variables)
-       self.variables = self.fdl.tree['variables']
-     else: 
-       self.variables = variables
+  def configure(self,scene):
+    self.variables = scene.fg.variables
 
 class DummyStateManager(TimeDependantStateManager):
   def getT(self,t):

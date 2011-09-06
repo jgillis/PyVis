@@ -38,10 +38,10 @@ class InteractiveStateManager(visualizer.states.InteractiveStateManager):
     for v in self.variables:
       s = controls.slider(pos=(-15,posy), width=7, length=70, axis=(1,0,0))
       
-      s.value = v["default"]
-      s.min,s.max = v["bounds"]
+      s.value = v.default
+      s.min,s.max = v.bounds
       
-      sc = controls.label(text=v["name"],align='right', pos=(r*(-0.5+0.1),posy),display=self.c.display,box = False )
+      sc = controls.label(text=v.name,align='right', pos=(r*(-0.5+0.1),posy),display=self.c.display,box = False )
       self.sliders.append(s)
       self.slidercaptions.append(sc)
       print posy
@@ -76,7 +76,7 @@ class InteractiveStateManager(visualizer.states.InteractiveStateManager):
     states = {}
     for v in self.variables:
       default = 0
-      states[v["name"]] = v["default"]
+      states[v.name] = v.default
     self.writeToSliders(states)
     
   def readFromSliders(self):
@@ -85,8 +85,8 @@ class InteractiveStateManager(visualizer.states.InteractiveStateManager):
     """
     ret= {}
     for (i,variable) in enumerate(self.variables):
-      ret[variable["name"]] = self.sliders[i].value
-      self.slidercaptions[i].text = variable["name"] + ": %.4f" %  self.sliders[i].value
+      ret[variable.name] = self.sliders[i].value
+      self.slidercaptions[i].text = variable.name + ": %.4f" %  self.sliders[i].value
    
     return ret
 
@@ -95,7 +95,7 @@ class InteractiveStateManager(visualizer.states.InteractiveStateManager):
     Expects a dict (variable name -> value)
     """
     for (i,variable) in enumerate(self.variables):
-      self.sliders[i].value = states[variable["name"]]
+      self.sliders[i].value = states[variable.name]
       
 
   def mainloop(self):

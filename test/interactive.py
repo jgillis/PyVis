@@ -3,7 +3,7 @@ from visualizer.vpython import *
 
 tm = RealTimeManager()
 
-sm = InteractiveStateManager('interactive.fdl')
+sm = InteractiveStateManager()
 
 s = Scene()
 s.config('interactive.fdl', tm,sm)

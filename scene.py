@@ -56,10 +56,15 @@ class Scene:
     """
     The main loop that does the drawing. Never returns
     """
+    if hasattr(self.stateManager,'configure'):
+      self.stateManager.configure(self)
     if hasattr(self.stateManager,'draw'):
       self.stateManager.draw()
+      
     if hasattr(self.timeManager,'draw'):
       self.timeManager.draw()
+    if hasattr(self.timeManager,'configure'):
+      self.timeManager.configure(self)
       
     while True:
       if hasattr(self.timeManager,'mainloop'):

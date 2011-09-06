@@ -11,7 +11,7 @@ class QuickStartException:
   pass
   
 def quickstart(*args,**kwargs):
-  quickstarts = [AxesInteractiveFrames]
+  quickstarts = [AxesInteractiveFdlName,AxesInteractiveFramesString]
   for q in quickstarts:
     try:
       q.do(*args,**kwargs)
@@ -19,8 +19,26 @@ def quickstart(*args,**kwargs):
     except QuickStartException as e:
       pass
 
+class AxesInteractiveFdlName(Quickstart):
+  @staticmethod
+  def do(arg):
+    if not(isinstance(arg,type(""))) or not(re.search(r"\.fdl",arg)):
+      raise QuickStartException()
+    
+    
+    tm = RealTimeManager()
+    sm = InteractiveStateManager()
 
-class AxesInteractiveFrames(Quickstart):
+    fg = FrameGraph()
+    fg.config()
+
+    s = Scene()
+    s.config(arg, tm,sm)
+    s.addAxes(Axes)
+
+    s.start()
+
+class AxesInteractiveFramesString(Quickstart):
   """
 
   Rx(alpha) tr(x,y,z)*Ry(beta) Rz(gamma)

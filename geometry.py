@@ -20,6 +20,7 @@ class Visualizer:
       setattr(self,k,self.scene.expressionManager.createExpression(v))
     # associate object with frame
     self.frame = self.scene.fg.getFrame(frame)
+    self.fg = self.scene.fg
     # draw object
     self.draw()
     

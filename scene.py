@@ -1,4 +1,4 @@
-from visualizer.frame import *
+import visualizer.frame as visframe
 from visualizer.expressions import *
 import fdl.primitives
 
@@ -13,8 +13,8 @@ class Scene:
     self.stateManager=stateManager
     self.timeManager=timeManager
     self.expressionManager=ExpressionManager(timeManager,stateManager)
-    self.fg=FrameGraph(self.expressionManager)
-    self.fg.config(filename, Frame, WorldFrame)
+    self.fg=visframe.FrameGraph(self.expressionManager)
+    self.fg.config(filename, visframe.Frame, visframe.WorldFrame)
     self.expressionManager.addContext(fdl.primitives.__dict__)
       
   def add(self,object):
@@ -25,6 +25,13 @@ class Scene:
     """
     if isinstance(object,Frame):
       self.fg.add(object)
+      
+  def addAxes(self,AxesClass):
+    colors = ['white','green','red','blue']
+    
+    for i,f in enumerate(self.fg.frames):
+      print i, f, f.id
+      self.addObject(f.id,AxesClass(color=colors[i % len(colors)]))
       
   def addObject(self,*args):
     """

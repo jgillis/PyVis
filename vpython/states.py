@@ -30,8 +30,9 @@ class InteractiveStateManager(visualizer.states.InteractiveStateManager):
     
     h = len(self.variables)*spacing_px + marginbottom_px + margintop_px + button_area_px + button_height_px
     
-    posy = -r/2 + marginbottom_px/h*r
     spacing = (spacing_px / h) * r
+    posy = -r/2 + marginbottom_px/h*r + len(self.variables)*spacing
+
     
 
     self.c = controls.controls(x=0, y=0, width=w, height=h, range=r)
@@ -45,7 +46,7 @@ class InteractiveStateManager(visualizer.states.InteractiveStateManager):
       self.sliders.append(s)
       self.slidercaptions.append(sc)
       print posy
-      posy+=spacing
+      posy-=spacing
     
     controls.button(pos=(0,r*(0.5-button_area_px/h)), height=button_height_px/h*r, width=r/2, text='reset' , action=lambda: self.reset())
 

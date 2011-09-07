@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-from numpy import prod
+from numpy import prod,floor
 import time
 import types
   
@@ -49,17 +49,27 @@ class FixedTimeManager(TimeManager):
       return self.index
     else:
       return self.T
-
+      
+      
+  def setIndex(self,value):
+    self.index = value
+    self.floatindex = value
   def setDiscrete(self,step=1):
     self.type=0
     self.step=1
-    self.index=0    
+    self.index=0
+    self.floatindex=0    
    
   def advance(self,step=None):
+    """
+    Step can be fractional
+    """
     if self.pause or not(hasattr(self,'timevec')):
       return
     if step is None:
       step=self.step
-    self.index += step
+    self.floatindex += step
+    self.index = int(self.floatindex)
     while self.index >= self.npoints:
       self.index -= self.npoints
+      self.floatindex -= self.npoints

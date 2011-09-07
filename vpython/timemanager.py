@@ -10,33 +10,36 @@ class FixedTimeManager(visualizer.timemanager.FixedTimeManager):
     controls.toggle(pos=(0,30),height=30, width=40, text='Pause', action=lambda: self.pauseToggle())
     controls.button(pos=(60,30), height=30, width=40, text='>>',action= lambda: self.last())
     
-    self.s1=controls.slider(pos=(-15,-40), width=7, length=70, axis=(1,0,0), action=lambda: self.slider1())
+    self.timelabel = controls.label(pos=(-15,-55),display=self.c.display)
+    self.s1=controls.slider(pos=(-15,-30), width=7, length=70, axis=(1,0,0), action=lambda: self.slider1())
     self.s1.value = 0
     
-    s2=controls.slider(pos=(-15,80), width=7, length=70, axis=(1,0,0))
-    s2.value = 1
+    self.s2=controls.slider(pos=(-15,80),min=-1,max=3, width=7, length=70, axis=(1,0,0),action=lambda: self.slider2())
+    self.s2.value = 0
+    
     
     self.pause = False
+    self.advancestep = 1
 
   def first(self):
-    print "first"
-    self.index=0
+    self.setIndex(0)
     
   def last(self):
-    print "last"
-    self.index=self.npoints-1
+    self.setIndex(self.npoints-1)
     
   def pauseToggle(self):
-    print "Paused"
     self.pause = not(self.pause)
     
   def slider1(self):
     if self.pause:
       self.sliderposTostate(self.s1.value)
+  
+  def slider2(self):
+    self.advancestep = 10.0**(self.s2.value)
       
   def sliderposTostate(self,value):
     if self.type==0:
-      self.index=int(value /100.0 * (self.npoints-1))
+      self.setIndex(int(value /100.0 * (self.npoints-1)))
     else:
       self.T = value /100.0 * self.timvec[-1]
       
@@ -53,10 +56,13 @@ class FixedTimeManager(visualizer.timemanager.FixedTimeManager):
   def debug(self,*args,**kwargs):
     print args
     print kwargs
+  
+  def showIndex(self):
+    self.timelabel.text = str(self.index)
     
   def mainloop(self):
     self.c.interact()
     visual.rate(40)
-    self.advance()
+    self.advance(self.advancestep)
     self.s1.value = self.sliderposFromstate()
-    print self.index
+    self.showIndex()

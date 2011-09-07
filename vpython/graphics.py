@@ -55,6 +55,35 @@ class Arrow(geometry.Arrow,Primitive):
     self.vis.axis = (self.x.value(), self.y.value(), self.z.value())
     self.vis.shaftwidth = self.r.value()
     Primitive.draw_update(self)
+    
+class Vector(geometry.Vector,Primitive):
+  """
+    The vector will have it's basepoint in the frame to which it has been assigned (possibly with an extra local T tranformation).
+    The vector's head point will be determined by an displacement dx, dy, dz, expressed in a particular frame e.
+    
+    dx: x displacement
+    dy: y displacement
+    dz: z displacement
+    
+    d: Displacement
+
+    r: radius
+    
+    e: (integer)  frame number 
+        
+    The arrow axis is the z-axis
+  """
+  def draw(self):
+    self.f = visual.frame()
+    self.vis=visual.arrow(frame=self.f, axis = (0,0,1))
+    Primitive.draw(self)
+    self.draw_update()
+    
+  def draw_update(self):
+    if hasattr(self,'xyz'):
+      self.vis.axis = (self.xyz[0], self.xyz[1], self.xyz[2])
+    self.vis.shaftwidth = self.r.value()
+    Primitive.draw_update(self)
   
 class Axes(geometry.Axes):
   """
@@ -66,6 +95,11 @@ class Axes(geometry.Axes):
     
 class Trace(geometry.Trace,Primitive):
   """
+  
+    dx: trace point x offset in local frame
+    dy: trace point y offset in local frame
+    dz: trace point z offset in local frame
+    
     L: length of memory, in number of times that draw_update was called
       -1 means unlimited
   """

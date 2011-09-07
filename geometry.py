@@ -2,6 +2,8 @@ import kinetics.kinematics as kinematics
 from kinetics.kinematics import tr
 import numpy
 
+import ipdb
+
 class KeywordAttributes:
   def __init__(self,**kwargs):
     for k,v in kwargs.items():
@@ -21,8 +23,18 @@ class Visualizer:
     # associate object with frame
     self.frame = self.scene.fg.getFrame(frame)
     self.fg = self.scene.fg
+    if hasattr(self,'post_addscene'):
+      self.post_addscene()
     # draw object
     self.draw()
+    
+"""
+There should also be strobe, with wrt.
+everything under wrt should just continue to progress in time.
+
+Must be PrimitiveCollection
+"""
+    
     
 class PrimitiveCollection(KeywordAttributes,Visualizer):
   """
@@ -115,6 +127,9 @@ class Primitive(KeywordAttributes,Visualizer):
     else:
       self.setFrameMatrix(mtx*M)
     self.draw_update()
+    
+  def draw(self):
+    pass
 
 class Box(Primitive):
   """
@@ -129,9 +144,9 @@ class Box(Primitive):
     
 class Trace(Primitive):
   """
-    x: trace point x coordinate
-    y: trace point y coordinate
-    z: trace point z coordinate
+    dx: trace point x offset in local frame
+    dy: trace point y offset in local frame
+    dz: trace point z offset in local frame
     
     L (optional, default -1): length of memory, in number of times that draw_update was called
       -1 means unlimited
@@ -150,7 +165,13 @@ class Trace(Primitive):
     else:
       L = -1
       
-    if not('wrt' in kwargs):  self.wrt = None
+    if not('wrt' in kwargs):   self.wrt = None
+    
+    if 'd' in kwargs:
+      self.d = Displacement(kwargs['d'])
+      del kwargs['d']
+    else:
+      self.d = Displacement(**kwargs)
     
     self.length = L
     if self.length == -1:
@@ -158,8 +179,13 @@ class Trace(Primitive):
     self.tracepointmatrix = numpy.matrix(numpy.zeros((4,self.length))*numpy.nan) # A ringbuffer matrix containing all tracepoints
     self.tracepointpointer = 0 # A pointer to the active ringbuffer element
     
+  def post_addscene(self):
+    self.d.addToScene(self.scene,self.frame)
+    if not(self.wrt is None):
+      self.wrt = self.fg.getFrame(self.wrt)
+    
   def update(self,t=None, pre=None):
-
+    self.d.update(t,pre)
     self.tracepointmatrix[:,self.tracepointpointer] = self.getTracePoint(t,pre)
 
     #print "origmatrix = ", self.tracepointmatrix
@@ -193,9 +219,11 @@ class Trace(Primitive):
     
     if not(self.wrt is None):
       wrt = self.wrt.getFrameMatrix(t)
-      return (kinematics.inv(wrt)*this*numpy.matrix([[self.x.value(t)],[self.y.value(t)],[self.z.value(t)],[1]]))
+      return kinematics.inv(wrt)*(self.d.xyz + this*numpy.matrix([[0],[0],[0],[1]]))
     else:
-      return (this*numpy.matrix([[self.x.value(t)],[self.y.value(t)],[self.z.value(t)],[1]]))
+      return self.d.xyz + this * numpy.matrix([[0],[0],[0],[1]])
+    
+    Primitive.update(self,t,pre)
     
 class Cylinder(Primitive):
   """
@@ -238,7 +266,7 @@ class Arrow(Primitive):
         
     The arrow axis is the z-axis
   """
-  expressions={'x':0,'y':0,'z': 0, 'r': 0.1}
+  expressions={'x':0,'y':0,'z': 1, 'r': 0.1}
 
   def __init__(self,**kwargs):
     Primitive.__init__(self,**kwargs)
@@ -247,6 +275,115 @@ class Arrow(Primitive):
     Primitive.update(self,t,pre)
     
     
+class Displacement(Primitive):
+  """
+    dx: x displacement
+    dy: y displacement
+    dz: z displacement
+    
+    e: (integer)  frame number 
+    
+    
+    xyz: displacement in world frame coordinates
+  """
+  expressions={'dx':0,'dy':0,'dz':0}
+  
+  def __init__(self,*args,**kwargs):
+    if len(args)>0 and (args[0],Displacement):
+      print "Creating copy"
+      orig = args[0]
+      self.dx = orig.dx
+      self.dy = orig.dy
+      self.dz = orig.dz
+      self.e = orig.e
+      if hasattr(orig,'add'):
+        self.add = Displacement(orig.add)
+    else:
+      if 'e' in kwargs:
+        self.e = kwargs['e']
+      else:
+        self.e = None
+    Primitive.__init__(self,**kwargs)
+    self.xyz_e = numpy.matrix([[0.0],[0],[0],[0]])
+
+  def update(self,t=None, pre=None):
+    if self.e is None:
+      print "Skipping"
+      self.xyz = numpy.matrix([[0.0],[0],[0],[0]])
+      return
+    self.xyz_e[0] = self.dx.value()
+    self.xyz_e[1] = self.dy.value()
+    self.xyz_e[2] = self.dz.value()
+    self.xyz = self.e.getFrameMatrix(t) * self.xyz_e
+      
+    if hasattr(self,'add'):
+      self.add.update(t,pre)
+      self.xyz += self.add.xyz
+
+  def post_addscene(self):
+    if self.e is None:
+      self.e = self.frame
+    else:
+      self.e = self.fg.getFrame(self.e)
+    if hasattr(self,'add'):
+      self.add.fg = self.fg
+      self.add.addToScene(self.scene,self.frame)
+    
+      
+  def __add__(self,d):
+    copy = Displacement(self)
+  
+    if d is self:
+      d = Displacement(d)
+      
+    copy.add = d
+    return copy
+      
+class Vector(Primitive):
+  """
+    The vector will have it's basepoint in the frame to which it has been assigned (possibly with an extra local T tranformation).
+    The vector's head point will be determined by an displacement dx, dy, dz, expressed in a particular frame e.
+    
+    dx: x displacement
+    dy: y displacement
+    dz: z displacement
+
+    r: radius
+    
+    e: (integer)  frame number 
+        
+    The arrow axis is the z-axis
+  """
+  
+  expressions={'r': 0.1,'x':0,'y':0,'z':0}
+
+  def __init__(self,**kwargs):
+    if 'd' in kwargs:
+      self.d = Displacement(kwargs['d'])
+      del kwargs['d']
+    else:
+      self.d = Displacement(**kwargs)
+      
+    print "using", self.d
+    Primitive.__init__(self,**kwargs)
+
+  def update(self,t=None, pre=None):
+    this = self.frame.getFrameMatrix(t)
+    if not(pre is None):
+      this = pre*this
+
+    M = self.T.value(t)
+    if not(M is None):
+      this = this * M
+      
+    self.d.update(t,pre)
+    self.xyz = kinematics.inv(this) * self.d.xyz
+    
+    Primitive.update(self,t,pre)
+
+  def post_addscene(self):
+    self.d.addToScene(self.scene,self.frame)
+      
 class Axes(PrimitiveCollection):
   """
   """

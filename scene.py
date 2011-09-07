@@ -49,6 +49,7 @@ class Scene:
     if len(args)==2:
       frame=args[0]
       obj=args[1]
+    frame = self.fg.getFrame(frame)
     obj.addToScene(self,frame)
     self.objects.append(obj)
 

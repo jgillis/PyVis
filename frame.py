@@ -9,6 +9,8 @@ class Frame(fdl.graph.Frame):
   def __init__(self,base,matrix,name='',description='',id=None):
     fdl.graph.Frame.__init__(self,base,base.fg.expressionManager.createExpression(matrix,force=1),name,description,id)
     
+    
+  # Caching might be good here
   def getFrameMatrix(self,t=None):
     if isinstance(self,fdl.graph.WorldFrame):
       return self.fg.eye

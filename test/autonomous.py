@@ -20,11 +20,11 @@ s.addObject(0,Box(x=1,y=1,z=0.1,T='tr(x,0,0)'))
 
 
 
-s.addObject(1,Trace(x=0,y=0,z=2))
+s.addObject(1,Trace(dx=0,dy=0,dz=2))
 
 
 s.addObject(2,Box(x=0.1,y=0.1,z=0.1,T='tr(1,0,0)'))
-s.addObject(2,Trace(x=1,y=0,z=0))
+s.addObject(2,Trace(dx=1,dy=0,dz=0))
 
 
 s.addObject(1,Arrow(x=1,y=0,z=2,color=(0.2,0.4,0.7)))

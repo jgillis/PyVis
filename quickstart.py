@@ -6,7 +6,11 @@ import numpy
 import types
 import imp
 import warnings
+import ipdb
 
+class QuickstartException(Exception):
+  pass
+  
 def getFunction(arg):
   """
   
@@ -20,9 +24,9 @@ def getFunction(arg):
     try:
       (myfile,myfunction) = arg.split(":")
     except:
-      raise Exception("getFunction(%s): expecting 'myfile.py:myfunction'" % arg)
+      raise QuickstartException("getFunction(%s): expecting 'myfile.py:myfunction'" % arg)
   else:
-    raise Exception("getFunction(%s): unknown argument type" % arg)
+    raise QuickstartException("getFunction(%s): unknown argument type" % arg)
   with warnings.catch_warnings(record=True) as w:
     mod = imp.load_source('module.name', myfile)
   if not(hasattr(mod,myfunction)):
@@ -35,9 +39,9 @@ def getDymFile(arg):
   getDymFile("myfile.dym")
   """
   if not(isinstance(arg,types.StringType)):
-    raise Exception("getDymFile(%s): argument must be string " % arg)
+    raise QuickstartException("getDymFile(%s): argument must be string " % arg)
   if not(arg.endswith('.dym')):
-    raise Exception("getDymFile(%s): argument mustend on dym " % arg)
+    raise QuickstartException("getDymFile(%s): argument mustend on dym " % arg)
   return arg
   
 def getFdl(arg):
@@ -45,9 +49,9 @@ def getFdl(arg):
   getFdl("myfile.fdl")
   """
   if not(isinstance(arg,types.StringType)):
-    raise Exception("getFdl(%s): argument must be string " % arg)
+    raise QuickstartException("getFdl(%s): argument must be string " % arg)
   if not(arg.endswith('.fdl')):
-    raise Exception("getFdl(%s): argument mustend on fdl " % arg)
+    raise QuickstartException("getFdl(%s): argument mustend on fdl " % arg)
   return arg
     
 def getFg(arg):
@@ -97,7 +101,7 @@ def quickstart(*args,**kwargs):
       try:
         meta[q] = f(arg)
         break
-      except:
+      except QuickstartException:
         pass
         
 

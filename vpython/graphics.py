@@ -22,6 +22,8 @@ class Box(geometry.Box,Primitive):
     x: length x
     y: length y
     z: length z
+    
+    The box lies completely in the positive-z half-plane.
   """
   def draw(self):
     self.f = visual.frame()
@@ -32,6 +34,10 @@ class Box(geometry.Box,Primitive):
     self.vis.length = self.x.value()
     self.vis.height = self.y.value()
     self.vis.width  = self.z.value()
+    
+    p = list(self.vis.pos)
+    p[2] = self.vis.width/2
+    self.vis.pos = tuple(p)
     Primitive.draw_update(self)
     
 class Arrow(geometry.Arrow,Primitive):

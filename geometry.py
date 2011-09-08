@@ -129,13 +129,16 @@ class Primitive(KeywordAttributes,Visualizer):
     self.draw_update()
     
   def draw(self):
-    self.draw_update()
+    if hasattr(self,'draw_update'):
+      self.draw_update()
 
 class Box(Primitive):
   """
     x: length x
     y: length y
     z: length z
+    
+    The box lies completely in the positive-z half-plane.
   """
   expressions = {'x':1,'y':1,'z':1}
 

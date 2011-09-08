@@ -4,3 +4,4 @@ from scene import *
 from timemanager import *
 from geometry import *
 from fdl.graph import *
+from fdl.primitives import *

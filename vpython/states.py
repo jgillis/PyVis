@@ -90,6 +90,9 @@ class InteractiveStateManager(visualizer.states.InteractiveStateManager):
       self.slidercaptions[i].text = variable.name + ": %.4f" %  self.sliders[i].value
    
     return ret
+    
+  def isReady(self):
+    return hasattr(self,'variables')
 
   def writeToSliders(self,states):
     """

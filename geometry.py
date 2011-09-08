@@ -129,7 +129,7 @@ class Primitive(KeywordAttributes,Visualizer):
     self.draw_update()
     
   def draw(self):
-    pass
+    self.draw_update()
 
 class Box(Primitive):
   """

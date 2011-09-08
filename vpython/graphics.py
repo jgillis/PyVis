@@ -27,7 +27,6 @@ class Box(geometry.Box,Primitive):
     self.f = visual.frame()
     self.vis=visual.box(frame=self.f)
     Primitive.draw(self)
-    self.draw_update()
     
   def draw_update(self):
     self.vis.length = self.x.value()
@@ -49,7 +48,6 @@ class Arrow(geometry.Arrow,Primitive):
     self.f = visual.frame()
     self.vis=visual.arrow(frame=self.f, axis = (0,0,1))
     Primitive.draw(self)
-    self.draw_update()
     
   def draw_update(self):
     self.vis.axis = (self.x.value(), self.y.value(), self.z.value())
@@ -77,7 +75,6 @@ class Vector(geometry.Vector,Primitive):
     self.f = visual.frame()
     self.vis=visual.arrow(frame=self.f, axis = (0,0,1))
     Primitive.draw(self)
-    self.draw_update()
     
   def draw_update(self):
     if hasattr(self,'xyz'):
@@ -109,7 +106,6 @@ class Trace(geometry.Trace,Primitive):
     self.f = visual.frame()
     self.vis=visual.curve(frame=self.f, x = [0,1,2])
     Primitive.draw(self)
-    self.draw_update()
     
   def draw_update(self):
     if hasattr(self,'curvepoints'):
@@ -128,7 +124,6 @@ class Cylinder(geometry.Cylinder,Primitive):
     self.f = visual.frame()
     self.vis=visual.cylinder(frame=self.f)
     Primitive.draw(self)
-    self.draw_update()
     
   def draw_update(self):
     self.vis.axis = (0,0,self.h.value())
@@ -147,7 +142,6 @@ class Text(geometry.Text,Primitive):
     self.f = visual.frame()
     self.vis=visual.label(frame=self.f,box = False)
     Primitive.draw(self)
-    self.draw_update()
     
   def draw_update(self):
     self.vis.text = self.caption.value()

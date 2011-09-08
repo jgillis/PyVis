@@ -5,7 +5,8 @@ from numpy import *
 
 class StateManager:
   pass
-  
+  def isReady(self):
+    return True
 
 class TimeDependantStateManager(StateManager):
   def __init__(self,filename):

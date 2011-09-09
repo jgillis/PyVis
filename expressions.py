@@ -68,8 +68,11 @@ class Expression:
       d = {'t' : t}
       if not(self.stateManager is None):
         d.update(self.stateManager.getStates(t))
-      return eval(self.expr,d,self.expressionManager.context)
-
+      try:
+        return eval(self.expr,d,self.expressionManager.context)
+      except Exception as e:
+        print e
+        raise Exception("Error while evaluating '%s'. States are: %s" % (self.expr,str(d)))
   # caching functionality
   def value(self,t=None):
     if self.type == 0:

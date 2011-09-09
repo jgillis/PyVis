@@ -1,7 +1,10 @@
 import types
 from dymola.dymio import *
+from dymola.simple import *
 from numpy import *
 
+
+import ipdb
 
 class StateManager:
   pass
@@ -27,19 +30,18 @@ class TimeDependantStateManager(StateManager):
 # Make this independent of timeManager
 class FileStateManager(TimeDependantStateManager):
   def __init__(self,filename, timeManager=None):
+    self.ann=AnnotatedDataModel(filename)
     self.dym=ResultDymolaTextual(filename)
-    self.timevec=self.dym.data[1][:,0]
+    self.timevec=self.ann.data['Time'].data
     if not(timeManager is None) and hasattr(timeManager,'setTimeVec'):
       timeManager.setTimeVec(self.timevec)
     self.variables=dict()
-    for i in range(len(self.dym.name)):
-      if self.dym.dataInfo[i,0]==2:
-        self.variables[self.dym.name[i]] = None
-
     self.constants=dict()
-    for i in range(len(self.dym.name)):
-      if self.dym.dataInfo[i,0]==1:
-        self.constants[self.dym.name[i]] = self.dym.data[0][0,self.dym.dataInfo[i,1]-1]
+    for k,v in self.ann.data.iteritems():
+      if v.isConstant():
+        self.constants[k] = v.data
+      else:
+        self.variables[k] = None # Existant, but no value yet
 
   def getT(self,t):
     if isinstance(t,types.IntType):
@@ -47,15 +49,18 @@ class FileStateManager(TimeDependantStateManager):
     else:
       return t
 
+
+  # problemas problemas  v.data should be nx3
   def getStates(self,t):
     if isinstance(t,types.IntType):
-      for k in self.variables.keys():
-        self.variables[k] = self.dym.data[1][t,self.dym.get_column(k)]
-        c = self.dym.data[1][:,self.dym.get_column(k)-1]
+      for k,v in self.ann.iterSeries():
+        self.variables[k] = v.data[...,t]
     else:
-      for k in self.variables.keys():
-        c = self.dym.data[1][:,self.dym.get_column(k)-1]
+      for k,v in self.ann.iterSeries():
+        c = v.data
         self.variables[k] = interp(t,self.timevec,c)
+     
+    
     return dict(self.constants,**self.variables)
 
   def getTimeVec(self):

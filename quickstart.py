@@ -58,6 +58,8 @@ def getFg(arg):
   """
   getFg("Rx(alpha) tr(x,y,z)*Ry(beta) Rz(gamma)")
   """
+  if not(isinstance(arg,types.StringType)):
+    raise QuickstartException("getFg(%s): argument must be string " % arg)
   fg = FrameGraph()
   fg.config()
 
@@ -90,10 +92,13 @@ def getFg(arg):
     fg.add(Variable(k,type=v))
   return fg
 
-
+def getExpressionDict(arg):
+  if not(isinstance(arg,types.DictType)):
+    raise QuickStartException("getExpressionDict(%s): expecting dict" % str(arg))
+  return arg
   
 def quickstart(*args,**kwargs):
-  quickstarts = [("fdl",getFdl),("decorator",getFunction),("dymfile",getDymFile),("fg",getFg)]
+  quickstarts = [("fdl",getFdl),("decorator",getFunction),("dymfile",getDymFile),("fg",getFg),("exprdict",getExpressionDict)]
   
   meta = {}
   for arg in args:
@@ -109,6 +114,13 @@ def quickstart(*args,**kwargs):
     tm = FixedTimeManager()
     sm = FileStateManager(meta['dymfile'])
     tm.setTimeVec(sm.getTimeVec());
+  elif 'exprdict' in meta:
+    tm = RealTimeManager()
+    em = ExpressionManager(tm)
+    s={}
+    for k,v in meta['exprdict'].iteritems():
+      s[k] = em(v)
+    sm = ExpressionStateManager(s)
   else:
     tm = RealTimeManager()
     sm = InteractiveStateManager()

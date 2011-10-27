@@ -1,5 +1,5 @@
-import kinetics.kinematics as kinematics
-from kinetics.kinematics import tr
+import kinetics.flatkinematics as kinematics
+from kinetics.transformations import tr
 import numpy
 
 import ipdb

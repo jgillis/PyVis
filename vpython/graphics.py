@@ -115,9 +115,10 @@ class Trace(geometry.Trace,Primitive):
     
   def draw_update(self):
     if hasattr(self,'curvepoints'):
-      self.vis.x = self.curvepoints[0,:]
-      self.vis.y = self.curvepoints[1,:]
-      self.vis.z = self.curvepoints[2,:]
+      # The conversion to list is because of a memory leak issue in vpython
+      self.vis.x = list(self.curvepoints[0,:])
+      self.vis.y = list(self.curvepoints[1,:])
+      self.vis.z = list(self.curvepoints[2,:])
     Primitive.draw_update(self)
   
 class Cylinder(geometry.Cylinder,Primitive):

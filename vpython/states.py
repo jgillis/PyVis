@@ -2,7 +2,7 @@ import visualizer.states
 import visual.controls as controls
 import types
 
-import ipdb
+#import ipdb
 
 class InteractiveStateManager(visualizer.states.InteractiveStateManager):
   def draw(self):

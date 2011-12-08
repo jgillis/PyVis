@@ -1,8 +1,8 @@
 import kinetics.flatkinematics as kinematics
-from kinetics.transformations import tr
+from kinetics.flatkinematics import tr
 import numpy
 
-import ipdb
+#import ipdb
 
 class KeywordAttributes:
   def __init__(self,**kwargs):

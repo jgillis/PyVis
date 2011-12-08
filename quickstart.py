@@ -6,7 +6,7 @@ import numpy
 import types
 import imp
 import warnings
-import ipdb
+#import ipdb
 
 class QuickstartException(Exception):
   pass

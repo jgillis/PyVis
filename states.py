@@ -31,8 +31,7 @@ class TimeDependantStateManager(StateManager):
 class FileStateManager(TimeDependantStateManager):
   def __init__(self,filename, timeManager=None):
     self.ann=AnnotatedDataModel(filename)
-    self.dym=ResultDymolaTextual(filename)
-    self.timevec=self.ann.data['Time'].data
+    self.timevec=self.ann.data['time'].data
     if not(timeManager is None) and hasattr(timeManager,'setTimeVec'):
       timeManager.setTimeVec(self.timevec)
     self.variables=dict()

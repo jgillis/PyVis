@@ -1,5 +1,5 @@
 import kinetics.flatkinematics as kinematics
-from kinetics.flatkinematics import tr
+from kinetics.flatkinematics import tr, Tscale
 import numpy
 
 #import ipdb
@@ -89,6 +89,10 @@ class PrimitiveCollection(KeywordAttributes,Visualizer):
       mtx = self.frame.getFrameMatrix(t)
     if not(M is None):
       mtx = mtx*M
+      
+    if not(self.s.value(t) is None):
+      mtx = mtx * Tscale(self.s.value(t))
+      
     for o in self.objects:
       o.update(t, pre=mtx)
       
@@ -389,15 +393,18 @@ class Vector(Primitive):
       
 class Axes(PrimitiveCollection):
   """
+    s scale
   """
   def __init__(self,**kwargs):
     PrimitiveCollection.__init__(self,**kwargs)
-    self.add([self.geometryModule.Arrow(x=1,y=0,z=0),
-              self.geometryModule.Arrow(x=0,y=1,z=0),
-              self.geometryModule.Arrow(x=0,y=0,z=1),
-              self.geometryModule.Text(caption="'x'",T=tr(1,0,0)),
-              self.geometryModule.Text(caption="'y'",T=tr(0,1,0)),
-              self.geometryModule.Text(caption="'z'",T=tr(0,0,1))
+    if not(hasattr(self,'s')):
+      self.s = self.expressions['s']
+    self.add([self.geometryModule.Arrow(x=self.s,y=0,z=0),
+              self.geometryModule.Arrow(x=0,y=self.s,z=0),
+              self.geometryModule.Arrow(x=0,y=0,z=self.s),
+              self.geometryModule.Text(caption="'x'",T=tr(self.s,0,0)),
+              self.geometryModule.Text(caption="'y'",T=tr(0,self.s,0)),
+              self.geometryModule.Text(caption="'z'",T=tr(0,0,self.s))
               ])
     
     
